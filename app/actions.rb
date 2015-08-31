@@ -4,6 +4,10 @@ helpers do
   end
 end
 
+#
+# authentication CRUD
+#
+
 get '/' do
   if current_user
     erb :index
@@ -12,22 +16,8 @@ get '/' do
   end
 end
 
-get '/users' do
-  @users = User.all
-  erb :users
-end
-
 get '/login' do
   erb :login
-end
-
-get '/signup' do
-  erb :signup
-end
-
-get '/logout' do
-  session.clear
-  redirect '/login'
 end
 
 post '/login' do
@@ -40,6 +30,10 @@ post '/login' do
   else
     redirect '/login'
   end
+end
+
+get '/signup' do
+  erb :signup
 end
 
 post '/signup' do
@@ -62,4 +56,40 @@ post '/signup' do
       redirect '/signup'
     end
   end
+end
+
+get '/logout' do
+  session.clear
+  redirect '/login'
+end
+
+get '/users' do
+  @users = User.all
+  erb :users
+end
+
+#
+# lorem ipsums CRUD
+#
+
+get '/lorem_ipsums' do
+  @records = LoremIpsum.where(:user_id => current_user.id)
+  erb :lorem_ipsums_index
+end
+
+get '/lorem_ipsums/:id' do
+  @record = LoremIpsum.find(params[:id])
+  erb :lorem_ipsums_show
+end
+
+post '/lorem_ipsums' do
+end
+
+put '/lorem_ipsums' do
+end
+
+delete '/lorem_ipsums/:id' do
+  record = LoremIpsum.find(params[:id])
+  record.destroy if record
+  redirect '/'
 end
